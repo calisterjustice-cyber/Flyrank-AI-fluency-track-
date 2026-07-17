@@ -1,0 +1,84 @@
+Preparation: Reviewed the basics chapters of the Anthropic Prompt Engineering Interactive Tutorial ahead of this exercise (partial pass — used it as a reference for the named techniques rather than a full end-to-end read).
+Target task (from FL-01): Writing a calm, empathetic response to a frustrated customer who says the product is broken and wants a refund. This directly tests my FL-01 claim — helping SaaS founders turn frustrating live chat moments into calm, clear resolutions.
+Version 0 (Naive baseline)
+Prompt: "Write a response to an angry customer who wants a refund"
+Output:
+I'm sorry for the inconvenience this has caused you. I understand your frustration and will process your refund request as soon as possible. Thank you for your patience.
+Notes:
+What's weak about it: Generic, robotic, could be copy-pasted to any complaint ever written. Doesn't address what's actually wrong, doesn't sound human, doesn't de-escalate — it just apologizes and moves on.
+Version 1 — Technique: Role Assignment
+Prompt: "You are a customer support specialist who helps SaaS founders de-escalate frustrated customers with empathy and clarity. Write a response to an angry customer who says the product is broken and wants a refund."
+Output:
+Hi there, I completely understand how frustrating it is when something you're relying on stops working — especially when it's affecting your day. Let's get this sorted out for you right away.
+Before we move to a refund, could you tell me a bit more about what's happening? Sometimes there's a quick fix, and I'd rather solve the actual problem than just close the ticket. If it turns out a refund is the right call, I'll make sure that happens smoothly too.
+Notes:
+What changed in the prompt: Assigned a specific role/persona — a customer support specialist skilled in de-escalation and empathy — instead of no role at all.
+What actually improved in the output: The tone shifted noticeably — warmer, more conversational, less robotic. It also introduced a subtle strategic move (offering to troubleshoot before defaulting to refund).
+What still failed: No real structure, just two paragraphs of prose. No acknowledgment of why the customer might be extra upset (lost time, lost trust).
+What I'd try next: Add context and motivation, so the AI weighs tone and priorities more carefully.
+Version 2 — Technique: Context and Motivation
+Prompt: "You are a customer support specialist who helps SaaS founders de-escalate frustrated customers with empathy and clarity. This customer has already contacted support twice before about this issue without resolution, and is now threatening to cancel their subscription and leave a negative review. Losing this customer would hurt the founder's retention numbers and public reputation. Write a response to this angry customer who says the product is broken and wants a refund."
+Output:
+Hi, I want to start by saying I'm really sorry this has dragged on — I can see you've reached out about this before, and it shouldn't have taken this long to get resolved. That's on us, not you.
+I'd like to personally make sure this gets fixed today, not just patched over. Could you walk me through exactly what's happening when it breaks? If we can identify the issue quickly, I'd rather fix it than lose you as a customer. And if a refund is still what you want after that, I'll process it immediately, no questions asked.
+Your trust matters more to us than this one ticket.
+Notes:
+What changed in the prompt: Added real context — repeated contact history and stated stakes (retention, reputation).
+What actually improved in the output: Now acknowledges the repeated contact and takes ownership instead of sounding neutral. Feels more accountable and specific to a real, escalated situation.
+What still failed: Still just flowing prose — no clear structure separating acknowledgment, ask, and resolution. Getting long, which could work against clarity in a live chat setting.
+What I'd try next: Add output structure so it reads clearly in a fast-paced chat window.
+Version 3 — Technique: Output Structure
+Prompt: "You are a customer support specialist who helps SaaS founders de-escalate frustrated customers with empathy and clarity. This customer has already contacted support twice before about this issue without resolution, and is now threatening to cancel their subscription and leave a negative review. Losing this customer would hurt the founder's retention numbers and public reputation. Write a response to this angry customer who says the product is broken and wants a refund. Structure the response in three short parts: (1) Acknowledge — validate their frustration and the history, (2) Ask — one clear question to move toward a fix, (3) Offer — the resolution path, including the refund option."
+Output:
+Acknowledge: I'm really sorry — I can see this is the third time you've had to reach out about the same issue, and that's not okay. You shouldn't have had to chase us for this.
+Ask: Can you tell me exactly what happens when the issue occurs (any error message, what you were doing right before it broke)? I want to fix the real problem, not just patch it.
+Offer: Once I understand what's going wrong, I'll either get it fixed today or process your refund immediately — your call. Either way, this ends today, not another round of back-and-forth.
+Notes:
+What changed in the prompt: Explicitly required a three-part structure with labels for each part.
+What actually improved in the output: Much easier to scan and read quickly — ideal for a live chat context. Each part now does one clear job instead of blending together.
+What still failed: The labeled headers wouldn't actually be sent to a real customer as-is. Still lacks any concrete example of how a real de-escalation conversation flows.
+What I'd try next: Add few-shot examples so the model has a concrete pattern to follow, not just abstract instructions.
+Version 4 — Technique: Few-Shot Examples
+Prompt: "You are a customer support specialist who helps SaaS founders de-escalate frustrated customers with empathy and clarity. Here is an example of the tone and structure I want:
+Example — Customer: 'This has been broken for a week and nobody's helped me.'
+Response: 'That's completely fair to be frustrated about — a week is too long. Can you tell me what error you're seeing right now? I want to get this fixed today, not add another delay.'
+Now write a response to this angry customer who says the product is broken and wants a refund. This customer has already contacted support twice before, and is threatening to cancel and leave a negative review. Structure it as: (1) Acknowledge, (2) Ask, (3) Offer."
+Output:
+Acknowledge: That's completely fair — this is the third time you've had to bring this up, and it shouldn't have taken this long to get sorted.
+Ask: Can you tell me exactly what's happening when it breaks, and what you were doing right before it did?
+Offer: I want this resolved today — either fixed properly, or refunded immediately if that's what you'd prefer. Your call, no more back and forth.
+Notes:
+What changed in the prompt: Added one worked example showing the exact tone and phrasing pattern wanted, before asking for the real response.
+What actually improved in the output: Phrasing now closely matches a natural, human tone instead of sounding like a template. The model picked up the rhythm and directness of the example rather than defaulting to generic corporate language.
+What still failed / honest flag: The example used here is illustrative, not a real transcript from my own work — so while it improved tone, it's borrowing a fabricated pattern. If I had a real transcript from actual support work, this technique would be far more powerful and authentic.
+What I'd try next: Add step decomposition so the model's reasoning process is more deliberate, not just pattern-matched from the example.
+Version 5 — Technique: Step Decomposition
+Prompt: "You are a customer support specialist who helps SaaS founders de-escalate frustrated customers with empathy and clarity. Before writing the final response, work through these steps: (1) Identify the specific emotion the customer is feeling and why, (2) Identify the one most useful question to ask to move toward a fix, (3) Identify the resolution options available (fix vs. refund), (4) Then write the final response structured as Acknowledge → Ask → Offer, using a natural, human tone. This customer has already contacted support twice before about this issue without resolution, and is now threatening to cancel their subscription and leave a negative review. The product is broken and they want a refund."
+Output:
+Step 1 — Emotion: The customer likely feels ignored and disrespected, not just inconvenienced — this is their third attempt, so the core emotion is "nobody is taking this seriously."
+Step 2 — Key question: What exactly happens when the product breaks (error message, trigger action) — this moves past frustration into actionable diagnosis.
+Step 3 — Resolution options: Either fix the underlying issue today, or process an immediate refund if they'd rather not continue.
+Final Response:
+Acknowledge: I'm sorry — this is the third time you've had to bring this up, and that's not okay. You deserved a fix long before now.
+Ask: Can you walk me through exactly what happens when it breaks — any error message, and what you were doing right before?
+Offer: I want this resolved today: either properly fixed, or refunded immediately if you'd prefer. Your call, and no more back and forth.
+Notes:
+What changed in the prompt: Required the model to reason through emotion, question, and options before writing, rather than jumping straight to a response.
+What actually improved in the output: The reasoning sharpened the final response's precision — Step 1 named the real emotion ("nobody is taking this seriously") more accurately than earlier versions, which only said "frustrated."
+What still failed / this didn't help much: Compared to Version 4, the final response itself barely changed — nearly identical wording. The visible reasoning added transparency more than it added quality to the customer-facing text.
+What I'd try next: Since Versions 3, 4, and 5 converged on similar wording, Version 4/5 is likely close to my ceiling for this scenario. Move to cross-model testing to see where a different model's blind spots emerge.
+Cross-Model Comparison: Claude (Version 5) vs. Copilot
+Note: ChatGPT was unavailable at the time of testing, so I used Copilot instead for the cross-model comparison.
+Copilot output (same final prompt):
+"I completely understand how frustrating this must feel, especially after reaching out twice already without getting the resolution you deserve. I'm really sorry you've had to go through this. To make sure we handle this the way you want, could you confirm whether you'd prefer us to try one last fix or go straight to processing a refund? If you'd like us to attempt a fix, I'll personally ensure it's prioritized and handled quickly. If you'd rather have a refund, I can initiate that right away so you don't have to chase this any further."
+Comparison:
+Tone: Claude was direct and ownership-focused ("that's not okay," "you deserved a fix long before now"). Copilot was softer and more diplomatic, leading with an empathy statement and less blunt about the failure.
+Structure: Claude followed the requested 3-part structure explicitly, with clear labels (Acknowledge, Ask, Offer). Copilot captured the same logic but wrote it as continuous prose without labels.
+Accuracy to prompt: Claude matched the exact structure requested. Copilot captured the intent but didn't follow the requested format.
+Handling of history: Both models specifically named the repeated contact ("third time" vs. "twice already") — similarly specific on this point.
+Question quality: Claude asked a diagnostic question (what happens when it breaks, error message, trigger action). Copilot asked a preference question instead (fix or refund?), skipping troubleshooting entirely.
+Failure point: Claude's version is slightly clinical/systematic-sounding due to the strict structure. Copilot's version skips the chance to actually solve the problem — it jumps straight to asking which resolution the customer wants, without attempting to understand the issue first, which could cost the founder a fixable customer.
+What this reveals: Claude adhered more literally to the structural instructions, while Copilot preserved the "spirit" of the prompt but softened the diagnostic push, likely because it defaulted to prioritizing customer choice over problem-solving.
+Final Reusable Prompt Template
+You are a customer support specialist who helps [target audience] de-escalate frustrated customers with empathy and clarity. Before writing the final response, work through these steps: (1) Identify the specific emotion the customer is feeling and why, (2) Identify the one most useful diagnostic question to ask, (3) Identify the resolution options available, (4) Then write the final response structured as Acknowledge → Ask → Offer, using a natural, human tone. Context: [insert relevant history/stakes — e.g., how many times they've contacted support, what's at risk]. Situation: [insert the specific complaint]."
+This template is reusable because it separates the model's reasoning from its output, forces a consistent structure, and leaves clear placeholders for context and situation so it adapts to any support scenario without losing the tone or diagnostic discipline built up across the five versions.
